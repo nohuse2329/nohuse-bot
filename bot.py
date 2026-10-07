@@ -33,5 +33,7 @@ async def on_member_join(member: discord.Member):
 
     await channel.send(embed=embed)
 
-# コピーしたトークンを貼り付け
-bot.run("MTU1Njk4ODA1NjM2NjYyMDcyMw.G0USN3.TvT4hFIyvVhQa_kbcHrQMYPsKT-t0jAslLjsCM")
+import os
+
+token = os.getenv("DISCORD_TOKEN")
+bot.run(token)
