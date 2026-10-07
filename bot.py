@@ -2,17 +2,36 @@ import discord
 from discord.ext import commands
 
 intents = discord.Intents.default()
-intents.message_content = True
 intents.members = True
+
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
-async def on_ready():
-    print(f"ログインしました: {bot.user}")
+async def on_member_join(member: discord.Member):
+    # 【🚪】参加ログ チャンネルを取得
+    channel = member.guild.get_channel(1557345458777628683)
+    if not channel:
+        return
 
-@bot.command()
-async def hello(ctx):
-    await ctx.send("こんにちは！専用Botだよ！")
+    # Unifyの /userinfo と全く同じ見た目のカードを作成
+    embed = discord.Embed(color=0x3498db)
+    embed.set_author(name=member.name)
+    embed.add_field(name="名前", value=member.mention, inline=False)
+    embed.add_field(name="ID", value=f"`{member.id}`", inline=False)
+    embed.add_field(
+        name="サーバー参加日", 
+        value=member.joined_at.strftime("%Y年%m月%d日 %H時%M分") if member.joined_at else "不明", 
+        inline=False
+    )
+    embed.add_field(
+        name="アカウント作成日", 
+        value=member.created_at.strftime("%Y年%m月%d日 %H時%M分"), 
+        inline=False
+    )
+    embed.set_thumbnail(url=member.display_avatar.url)
+    embed.set_footer(text=f"実行者: {bot.user.name}")
 
-# 先ほど取得したトークン（" "で囲む）
-bot.run("MTU1Njk4ODA1NjM2NjYyMDcyMw.GQDeyI.7Hewng7EjPxhl7GmQb2rgRfcQuDF_5MW5JcGwQ")
+    await channel.send(embed=embed)
+
+# コピーしたトークンを貼り付け
+bot.run("MTU1Njk4ODA1NjM2NjYyMDcyMw.GGf6wQ.dR4Ca9zr9NlzATxGz6qzZ3Md-IP8vH8ej1Jjkk")
